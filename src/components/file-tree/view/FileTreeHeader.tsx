@@ -1,6 +1,18 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import { ChevronDown, Eye, FileText, FolderPlus, List, Loader2, RefreshCw, Search, TableProperties, Upload, X } from 'lucide-react';
+import {
+  ChevronDown,
+  Eye,
+  FileText,
+  FolderPlus,
+  List,
+  Loader2,
+  RefreshCw,
+  Search,
+  TableProperties,
+  Upload,
+  X,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { Button, Input } from '../../../shared/view/ui';
@@ -25,6 +37,57 @@ type FileTreeHeaderProps = {
   isUploading?: boolean;
   uploadProgress?: number | null;
 };
+
+/** Compact 28×28 icon button with tooltip */
+function ToolbarButton({
+  label,
+  onClick,
+  disabled,
+  isActive,
+  children,
+}: {
+  label: string;
+  onClick?: () => void;
+  disabled?: boolean;
+  isActive?: boolean;
+  children: React.ReactNode;
+}) {
+  const [showTip, setShowTip] = useState(false);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        aria-label={label}
+        onClick={onClick}
+        disabled={disabled}
+        onMouseEnter={() => setShowTip(true)}
+        onMouseLeave={() => setShowTip(false)}
+        onFocus={() => setShowTip(true)}
+        onBlur={() => setShowTip(false)}
+        className={cn(
+          'flex h-7 w-7 items-center justify-center rounded-md transition-colors duration-150',
+          isActive
+            ? 'bg-teal-600 text-white dark:bg-teal-500'
+            : 'text-muted-foreground hover:bg-slate-100 hover:text-foreground dark:hover:bg-slate-700',
+          disabled && 'cursor-not-allowed opacity-40',
+        )}
+      >
+        {children}
+      </button>
+
+      {/* Tooltip */}
+      {showTip && (
+        <div
+          className="pointer-events-none absolute left-1/2 top-full z-50 mt-1.5 -translate-x-1/2 whitespace-nowrap rounded-md border border-border bg-popover px-2 py-1 text-[11px] font-medium text-popover-foreground shadow-md"
+          role="tooltip"
+        >
+          {label}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function FileTreeHeader({
   viewMode,
@@ -53,12 +116,15 @@ export default function FileTreeHeader({
   };
 
   return (
-    <div className="space-y-2 border-b border-border px-3 pb-2 pt-3">
-      {/* Title and Toolbar */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-foreground">{t('fileTree.files')}</h3>
+    <div className="space-y-2 border-b border-border/60 bg-background px-3 pb-2 pt-3">
+      {/* ── Title + compact toolbar ── */}
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+          {t('fileTree.files')}
+        </h3>
+
         <div className="flex items-center gap-0.5">
-          {/* Action buttons */}
+          {/* Upload */}
           {onUploadFiles && (
             <>
               <input
@@ -70,144 +136,118 @@ export default function FileTreeHeader({
                 tabIndex={-1}
                 aria-hidden="true"
               />
-              <Button
-                variant="ghost"
-                size="sm"
-                className="relative h-7 w-7 p-0"
-                onClick={() => uploadInputRef.current?.click()}
-                title={
+              <ToolbarButton
+                label={
                   isUploading
-                    ? t('fileTree.uploadingFiles', 'Uploading files')
-                    : t('fileTree.uploadFiles', 'Upload files (max {{size}} each)', {
-                        size: MAX_FILE_UPLOAD_SIZE_LABEL,
-                      })
+                    ? t('fileTree.uploadingFiles', 'Uploading…')
+                    : t('fileTree.uploadFiles', `Upload (max ${MAX_FILE_UPLOAD_SIZE_LABEL})`)
                 }
-                aria-label={t('fileTree.uploadFiles', 'Upload files (max {{size}} each)', {
-                  size: MAX_FILE_UPLOAD_SIZE_LABEL,
-                })}
+                onClick={() => uploadInputRef.current?.click()}
                 disabled={operationLoading}
               >
                 {isUploading ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <div className="relative">
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    {typeof uploadProgress === 'number' && (
+                      <span
+                        className="absolute bottom-0 left-1/2 block h-0.5 -translate-x-1/2 rounded-full bg-[var(--color-teal)] transition-[width] duration-150"
+                        style={{ width: `${uploadProgress}%` }}
+                      />
+                    )}
+                  </div>
                 ) : (
                   <Upload className="h-3.5 w-3.5" />
                 )}
-                {isUploading && typeof uploadProgress === 'number' && (
-                  <span className="absolute bottom-0.5 left-1/2 h-0.5 w-4 -translate-x-1/2 overflow-hidden rounded-full bg-primary/20">
-                    <span
-                      className="block h-full rounded-full bg-primary transition-[width] duration-150"
-                      style={{ width: `${uploadProgress}%` }}
-                    />
-                  </span>
-                )}
-              </Button>
+              </ToolbarButton>
             </>
           )}
+
+          {/* New file */}
           {onNewFile && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 w-7 p-0"
+            <ToolbarButton
+              label={t('fileTree.newFile', 'New File')}
               onClick={onNewFile}
-              title={t('fileTree.newFile', 'New File (Cmd+N)')}
-              aria-label={t('fileTree.newFile', 'New File (Cmd+N)')}
               disabled={operationLoading}
             >
               <FileText className="h-3.5 w-3.5" />
-            </Button>
+            </ToolbarButton>
           )}
+
+          {/* New folder */}
           {onNewFolder && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 w-7 p-0"
+            <ToolbarButton
+              label={t('fileTree.newFolder', 'New Folder')}
               onClick={onNewFolder}
-              title={t('fileTree.newFolder', 'New Folder (Cmd+Shift+N)')}
-              aria-label={t('fileTree.newFolder', 'New Folder (Cmd+Shift+N)')}
               disabled={operationLoading}
             >
               <FolderPlus className="h-3.5 w-3.5" />
-            </Button>
+            </ToolbarButton>
           )}
+
+          {/* Refresh */}
           {onRefresh && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 w-7 p-0"
+            <ToolbarButton
+              label={t('fileTree.refresh', 'Refresh')}
               onClick={onRefresh}
-              title={t('fileTree.refresh', 'Refresh')}
-              aria-label={t('fileTree.refresh', 'Refresh')}
               disabled={operationLoading}
             >
-              <RefreshCw className={cn('w-3.5 h-3.5', loading && 'animate-spin')} />
-            </Button>
+              <RefreshCw className={cn('h-3.5 w-3.5', loading && 'animate-spin')} />
+            </ToolbarButton>
           )}
+
+          {/* Collapse all */}
           {onCollapseAll && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 w-7 p-0"
-              onClick={onCollapseAll}
-              title={t('fileTree.collapseAll', 'Collapse All')}
-              aria-label={t('fileTree.collapseAll', 'Collapse All')}
-            >
+            <ToolbarButton label={t('fileTree.collapseAll', 'Collapse All')} onClick={onCollapseAll}>
               <ChevronDown className="h-3.5 w-3.5" />
-            </Button>
+            </ToolbarButton>
           )}
+
           {/* Divider */}
-          <div className="mx-0.5 h-4 w-px bg-border" />
-          {/* View mode buttons */}
-          <Button
-            variant={viewMode === 'simple' ? 'default' : 'ghost'}
-            size="sm"
-            className="h-7 w-7 p-0"
+          <div className="mx-1 h-4 w-px bg-border/60" />
+
+          {/* View mode toggles */}
+          <ToolbarButton
+            label={t('fileTree.simpleView', 'Simple')}
             onClick={() => onViewModeChange('simple')}
-            title={t('fileTree.simpleView')}
-            aria-label={t('fileTree.simpleView')}
+            isActive={viewMode === 'simple'}
           >
             <List className="h-3.5 w-3.5" />
-          </Button>
-          <Button
-            variant={viewMode === 'compact' ? 'default' : 'ghost'}
-            size="sm"
-            className="h-7 w-7 p-0"
+          </ToolbarButton>
+          <ToolbarButton
+            label={t('fileTree.compactView', 'Compact')}
             onClick={() => onViewModeChange('compact')}
-            title={t('fileTree.compactView')}
-            aria-label={t('fileTree.compactView')}
+            isActive={viewMode === 'compact'}
           >
             <Eye className="h-3.5 w-3.5" />
-          </Button>
-          <Button
-            variant={viewMode === 'detailed' ? 'default' : 'ghost'}
-            size="sm"
-            className="h-7 w-7 p-0"
+          </ToolbarButton>
+          <ToolbarButton
+            label={t('fileTree.detailedView', 'Detailed')}
             onClick={() => onViewModeChange('detailed')}
-            title={t('fileTree.detailedView')}
-            aria-label={t('fileTree.detailedView')}
+            isActive={viewMode === 'detailed'}
           >
             <TableProperties className="h-3.5 w-3.5" />
-          </Button>
+          </ToolbarButton>
         </div>
       </div>
 
-      {/* Search Bar */}
+      {/* ── Search bar ── */}
       <div className="relative">
-        <Search className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+        <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--color-text-faint)]" />
         <Input
           type="text"
-          placeholder={t('fileTree.searchPlaceholder')}
+          placeholder={t('fileTree.searchPlaceholder', 'Search files…')}
           value={searchQuery}
           onChange={(event) => onSearchQueryChange(event.target.value)}
-          className="h-8 pl-8 pr-8 text-sm"
+          className="h-8 rounded-lg border border-border/60 bg-slate-50 pl-8 pr-8 text-sm placeholder:text-muted-foreground/60 focus:border-teal-600 focus:ring-1 focus:ring-teal-600 dark:bg-slate-800/60"
         />
         {searchQuery && (
           <Button
             variant="ghost"
             size="sm"
-            className="absolute right-0.5 top-1/2 h-5 w-5 -translate-y-1/2 p-0 hover:bg-accent"
+            className="absolute right-0.5 top-1/2 h-6 w-6 -translate-y-1/2 p-0 hover:bg-slate-200 dark:hover:bg-slate-700"
             onClick={() => onSearchQueryChange('')}
-            title={t('fileTree.clearSearch')}
-            aria-label={t('fileTree.clearSearch')}
+            title={t('fileTree.clearSearch', 'Clear search')}
+            aria-label={t('fileTree.clearSearch', 'Clear search')}
           >
             <X className="h-3 w-3" />
           </Button>

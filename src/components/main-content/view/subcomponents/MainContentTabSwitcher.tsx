@@ -1,4 +1,11 @@
-import { MessageSquare, Terminal, Folder, GitBranch, ClipboardCheck, type LucideIcon } from 'lucide-react';
+import {
+  MessageSquare,
+  Terminal,
+  Folder,
+  GitBranch,
+  ClipboardCheck,
+  type LucideIcon,
+} from 'lucide-react';
 import type { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip, PillBar, Pill } from '../../../../shared/view/ui';
@@ -17,6 +24,10 @@ type BuiltInTab = {
   id: AppTab;
   labelKey: string;
   icon: LucideIcon;
+  /** Tailwind text-color class applied to the icon when the tab is inactive */
+  iconColor: string;
+  /** Tailwind text-color class applied to the icon + label when active */
+  activeColor: string;
 };
 
 type PluginTab = {
@@ -30,10 +41,38 @@ type PluginTab = {
 type TabDefinition = BuiltInTab | PluginTab;
 
 const BASE_TABS: BuiltInTab[] = [
-  { kind: 'builtin', id: 'chat',  labelKey: 'tabs.chat',  icon: MessageSquare },
-  { kind: 'builtin', id: 'shell', labelKey: 'tabs.shell', icon: Terminal },
-  { kind: 'builtin', id: 'files', labelKey: 'tabs.files', icon: Folder },
-  { kind: 'builtin', id: 'git',   labelKey: 'tabs.git',   icon: GitBranch },
+  {
+    kind: 'builtin',
+    id: 'chat',
+    labelKey: 'tabs.chat',
+    icon: MessageSquare,
+    iconColor: 'text-violet-500',
+    activeColor: 'text-violet-600 dark:text-violet-400',
+  },
+  {
+    kind: 'builtin',
+    id: 'shell',
+    labelKey: 'tabs.shell',
+    icon: Terminal,
+    iconColor: 'text-emerald-500',
+    activeColor: 'text-emerald-600 dark:text-emerald-400',
+  },
+  {
+    kind: 'builtin',
+    id: 'files',
+    labelKey: 'tabs.files',
+    icon: Folder,
+    iconColor: 'text-amber-500',
+    activeColor: 'text-amber-600 dark:text-amber-400',
+  },
+  {
+    kind: 'builtin',
+    id: 'git',
+    labelKey: 'tabs.git',
+    icon: GitBranch,
+    iconColor: 'text-rose-500',
+    activeColor: 'text-rose-600 dark:text-rose-400',
+  },
 ];
 
 const TASKS_TAB: BuiltInTab = {
@@ -41,6 +80,8 @@ const TASKS_TAB: BuiltInTab = {
   id: 'tasks',
   labelKey: 'tabs.tasks',
   icon: ClipboardCheck,
+  iconColor: 'text-sky-500',
+  activeColor: 'text-sky-600 dark:text-sky-400',
 };
 
 export default function MainContentTabSwitcher({
@@ -70,24 +111,39 @@ export default function MainContentTabSwitcher({
       {tabs.map((tab) => {
         const isActive = tab.id === activeTab;
         const displayLabel = tab.kind === 'builtin' ? t(tab.labelKey) : tab.label;
+        const iconColor = tab.kind === 'builtin'
+          ? (isActive ? tab.activeColor : tab.iconColor)
+          : '';
 
         return (
           <Tooltip key={tab.id} content={displayLabel} position="bottom">
             <Pill
               isActive={isActive}
               onClick={() => setActiveTab(tab.id)}
-              className="px-2.5 py-[5px]"
+              className="px-3 py-1.5"
             >
               {tab.kind === 'builtin' ? (
-                <tab.icon className="h-3.5 w-3.5" strokeWidth={isActive ? 2.2 : 1.8} />
+                <tab.icon
+                  className={`h-4 w-4 flex-shrink-0 transition-colors duration-150 ${iconColor}`}
+                  strokeWidth={isActive ? 2.4 : 1.8}
+                />
               ) : (
                 <PluginIcon
                   pluginName={tab.pluginName}
                   iconFile={tab.iconFile}
-                  className="flex h-3.5 w-3.5 items-center justify-center [&>svg]:h-full [&>svg]:w-full"
+                  className="flex h-4 w-4 flex-shrink-0 items-center justify-center [&>svg]:h-full [&>svg]:w-full"
                 />
               )}
-              <span className="hidden lg:inline">{displayLabel}</span>
+              {/* Label: always shown on sm+, bold + colored when active */}
+              <span
+                className={`hidden sm:inline text-xs transition-colors duration-150 ${
+                  isActive
+                    ? `font-bold ${tab.kind === 'builtin' ? tab.activeColor : 'text-foreground'}`
+                    : 'font-medium text-muted-foreground'
+                }`}
+              >
+                {displayLabel}
+              </span>
             </Pill>
           </Tooltip>
         );

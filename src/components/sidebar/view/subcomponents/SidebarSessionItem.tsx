@@ -132,11 +132,12 @@ export default function SidebarSessionItem({
       <div className="md:hidden">
         <div
           className={cn(
-            'p-2 mx-3 my-0.5 rounded-md bg-card border active:scale-[0.98] transition-all duration-150 relative',
-            isSelected ? 'bg-primary/5 border-primary/20' : '',
-            !isSelected && sessionView.isActive
-              ? 'border-green-500/30 bg-green-50/5 dark:bg-green-900/5'
-              : 'border-border/30',
+            'p-2 mx-3 my-0.5 rounded-lg bg-card border active:scale-[0.98] transition-all duration-150 relative',
+            isSelected
+              ? 'bg-zinc-100 dark:bg-zinc-800/40 border-zinc-300 dark:border-zinc-700'
+              : !isSelected && sessionView.isActive
+                ? 'border-emerald-500/25 bg-emerald-50/5 dark:bg-emerald-950/5'
+                : 'border-zinc-200/50 dark:border-zinc-800/40',
           )}
           onClick={selectMobileSession}
         >
@@ -144,7 +145,7 @@ export default function SidebarSessionItem({
             <div
               className={cn(
                 'w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0',
-                isSelected ? 'bg-primary/10' : 'bg-muted/50',
+                isSelected ? 'bg-zinc-200 dark:bg-zinc-700 text-foreground' : 'bg-zinc-100 dark:bg-zinc-800 text-muted-foreground',
               )}
             >
               <SessionProviderLogo provider={session.__provider} className="h-3 w-3" />
@@ -185,8 +186,10 @@ export default function SidebarSessionItem({
         <Button
           variant="ghost"
           className={cn(
-            'w-full justify-start p-2 h-auto font-normal text-left hover:bg-accent/50 transition-colors duration-200',
-            isSelected && 'bg-accent text-accent-foreground',
+            'w-full justify-start py-1.5 px-2.5 h-auto font-normal text-left text-muted-foreground hover:text-foreground rounded-lg transition-all duration-200 border-l-2 border-transparent',
+            isSelected
+              ? 'bg-zinc-200/60 dark:bg-zinc-800/50 text-foreground font-semibold border-zinc-400 dark:border-zinc-500 pl-2 rounded-l-none'
+              : 'hover:bg-zinc-200/30 dark:hover:bg-zinc-800/20',
           )}
           onClick={() => onSessionSelect(session, project.projectId)}
         >

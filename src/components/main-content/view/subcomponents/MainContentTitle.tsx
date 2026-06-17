@@ -55,9 +55,9 @@ export default function MainContentTitle({
   const showChatNewSession = activeTab === 'chat' && !selectedSession;
 
   return (
-    <div className="scrollbar-hide flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
+    <div className="scrollbar-hide flex min-w-0 flex-1 items-center gap-2.5 overflow-x-auto">
       {showSessionIcon && (
-        <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center">
+        <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-900/40 ring-1 ring-violet-200 dark:ring-violet-800">
           <SessionProviderLogo provider={selectedSession?.__provider} className="h-4 w-4" />
         </div>
       )}
@@ -65,25 +65,47 @@ export default function MainContentTitle({
       <div className="min-w-0 flex-1">
         {activeTab === 'chat' && selectedSession ? (
           <div className="min-w-0">
-            <h2 className="scrollbar-hide overflow-x-auto whitespace-nowrap text-sm font-semibold leading-tight text-foreground">
+            {/* Session title */}
+            <h2 className="scrollbar-hide overflow-x-auto whitespace-nowrap text-[15px] font-bold leading-snug tracking-tight text-foreground">
               {getSessionTitle(selectedSession)}
             </h2>
-            <div className="truncate text-[11px] leading-tight text-muted-foreground">{selectedProject.displayName}</div>
+            {/* Project sub-label */}
+            <div className="mt-0.5 flex items-center gap-1.5 truncate">
+              <span className="h-2 w-2 flex-shrink-0 rounded-full bg-teal-500 dark:bg-teal-400" />
+              <span className="truncate text-xs font-semibold leading-tight text-slate-500 dark:text-slate-400">
+                {selectedProject.displayName}
+              </span>
+            </div>
           </div>
         ) : showChatNewSession ? (
           <div className="min-w-0">
-            <h2 className="text-base font-semibold leading-tight text-foreground">{t('mainContent.newSession')}</h2>
-            <div className="truncate text-xs leading-tight text-muted-foreground">{selectedProject.displayName}</div>
+            <h2 className="text-[15px] font-bold leading-snug tracking-tight text-foreground">
+              {t('mainContent.newSession')}
+            </h2>
+            <div className="mt-0.5 flex items-center gap-1.5 truncate">
+              <span className="h-2 w-2 flex-shrink-0 rounded-full bg-slate-400 dark:bg-slate-500" />
+              <span className="truncate text-xs font-semibold leading-tight text-slate-500 dark:text-slate-400">
+                {selectedProject.displayName}
+              </span>
+            </div>
           </div>
         ) : (
           <div className="min-w-0">
-            <h2 className="text-sm font-semibold leading-tight text-foreground">
+            {/* Section title — e.g. "Project Files", "Source Control" */}
+            <h2 className="text-[15px] font-bold leading-snug tracking-tight text-foreground">
               {getTabTitle(activeTab, shouldShowTasksTab, t, pluginDisplayName)}
             </h2>
-            <div className="truncate text-[11px] leading-tight text-muted-foreground">{selectedProject.displayName}</div>
+            {/* Project name — clearly readable, not italic/thin */}
+            <div className="mt-0.5 flex items-center gap-1.5 truncate">
+              <span className="h-2 w-2 flex-shrink-0 rounded-full bg-amber-400 dark:bg-amber-500" />
+              <span className="truncate text-xs font-semibold leading-tight text-slate-600 dark:text-slate-300">
+                {selectedProject.displayName}
+              </span>
+            </div>
           </div>
         )}
       </div>
     </div>
   );
 }
+

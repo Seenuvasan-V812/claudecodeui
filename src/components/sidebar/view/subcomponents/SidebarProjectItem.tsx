@@ -121,11 +121,11 @@ export default function SidebarProjectItem({
         <div className="md:hidden">
           <div
             className={cn(
-              'p-3 mx-3 my-1 rounded-lg bg-card border border-border/50 active:scale-[0.98] transition-all duration-150',
-              isSelected && 'bg-primary/5 border-primary/20',
+              'p-3 mx-3 my-1 rounded-xl bg-card border border-zinc-200/55 dark:border-zinc-800/60 active:scale-[0.98] transition-all duration-150',
+              isSelected && 'bg-indigo-500/5 border-indigo-500/20 dark:bg-indigo-500/10 dark:border-indigo-500/20',
               isStarred &&
                 !isSelected &&
-                'bg-yellow-50/50 dark:bg-yellow-900/5 border-yellow-200/30 dark:border-yellow-800/30',
+                'bg-yellow-500/5 dark:bg-yellow-500/5 border-yellow-500/10 dark:border-yellow-500/15',
             )}
             onClick={toggleProject}
           >
@@ -259,11 +259,13 @@ export default function SidebarProjectItem({
         <Button
           variant="ghost"
           className={cn(
-            'hidden md:flex w-full justify-between p-2 h-auto font-normal hover:bg-accent/50',
-            isSelected && 'bg-accent text-accent-foreground',
+            'hidden md:flex w-full justify-between py-2 px-2.5 h-auto font-normal text-muted-foreground hover:text-foreground rounded-lg transition-all duration-200 border-l-2 border-transparent',
+            isSelected
+              ? 'bg-zinc-200/60 dark:bg-zinc-800/50 text-foreground font-semibold border-zinc-400 dark:border-zinc-500 pl-2 rounded-l-none'
+              : 'hover:bg-zinc-200/30 dark:hover:bg-zinc-800/20',
             isStarred &&
               !isSelected &&
-              'bg-yellow-50/50 dark:bg-yellow-900/10 hover:bg-yellow-100/50 dark:hover:bg-yellow-900/20',
+              'bg-yellow-500/5 dark:bg-yellow-500/5 hover:bg-yellow-500/10 dark:hover:bg-yellow-500/10 text-yellow-700 dark:text-yellow-400',
           )}
           onClick={selectAndToggleProject}
         >

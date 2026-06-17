@@ -188,7 +188,7 @@ export default function SidebarContent({
 
   return (
     <div
-      className="flex h-full flex-col bg-background/80 backdrop-blur-sm md:w-72 md:select-none"
+      className="flex h-full flex-col bg-zinc-50/95 dark:bg-[#0b0c0e]/95 border-r border-zinc-200/50 dark:border-zinc-800/40 shadow-[1px_0_0_0_rgba(0,0,0,0.03)] dark:shadow-[1px_0_0_0_rgba(255,255,255,0.01)] md:w-80 md:select-none transition-all duration-300"
       style={{}}
     >
       <SidebarHeader
@@ -210,7 +210,7 @@ export default function SidebarContent({
         t={t}
       />
 
-      <ScrollArea className="flex-1 overflow-y-auto overscroll-contain md:px-1.5 md:py-2">
+      <ScrollArea className="flex-1 overflow-y-auto overscroll-contain md:px-3 md:py-3">
         {showConversationSearch ? (
           isSearching && !hasPartialResults ? (
             <div className="px-4 py-12 text-center md:py-8">

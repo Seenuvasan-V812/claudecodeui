@@ -15,6 +15,7 @@ export default {
     },
     extend: {
       colors: {
+        // ── Legacy tokens (kept for backward compat) ──────────────────
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -47,6 +48,47 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        // ── New semantic design tokens ─────────────────────────────────
+        // Primary teal accent
+        teal: {
+          DEFAULT: "var(--color-teal)",
+          fg: "var(--color-teal-fg)",
+          subtle: "var(--color-teal-subtle)",
+        },
+        // Surface depth layers
+        surface: {
+          bg: "var(--color-bg)",
+          DEFAULT: "var(--color-surface)",
+          2: "var(--color-surface-2)",
+          offset: "var(--color-offset)",
+        },
+        // Semantic status
+        success: {
+          DEFAULT: "var(--color-success)",
+          fg: "var(--color-success-fg)",
+          subtle: "var(--color-success-subtle)",
+        },
+        warning: {
+          DEFAULT: "var(--color-warning)",
+          fg: "var(--color-warning-fg)",
+          subtle: "var(--color-warning-subtle)",
+        },
+        error: {
+          DEFAULT: "var(--color-error)",
+          fg: "var(--color-error-fg)",
+          subtle: "var(--color-error-subtle)",
+        },
+        info: {
+          DEFAULT: "var(--color-info)",
+          fg: "var(--color-info-fg)",
+          subtle: "var(--color-info-subtle)",
+        },
+        // Text hierarchy
+        txt: {
+          primary: "var(--color-text-primary)",
+          muted: "var(--color-text-muted)",
+          faint: "var(--color-text-faint)",
         },
       },
       borderRadius: {

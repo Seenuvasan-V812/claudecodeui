@@ -88,7 +88,7 @@ export default function SidebarHeader({
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 w-7 rounded-lg p-0 text-muted-foreground hover:bg-accent/80 hover:text-foreground"
+              className="h-7 w-7 rounded-lg p-0 text-muted-foreground hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 hover:text-foreground"
               onClick={onRefresh}
               disabled={isRefreshing}
               title={t('tooltips.refresh')}
@@ -102,16 +102,7 @@ export default function SidebarHeader({
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 w-7 rounded-lg p-0 text-muted-foreground hover:bg-accent/80 hover:text-foreground"
-              onClick={onCreateProject}
-              title={t('tooltips.createProject')}
-            >
-              <Plus className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 w-7 rounded-lg p-0 text-muted-foreground hover:bg-accent/80 hover:text-foreground"
+              className="h-7 w-7 rounded-lg p-0 text-muted-foreground hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 hover:text-foreground"
               onClick={onCollapseSidebar}
               title={t('tooltips.hideSidebar')}
             >
@@ -122,19 +113,30 @@ export default function SidebarHeader({
 
         <GitHubStarBadge />
 
+        {/* Prominent Create Project Button */}
+        <div className="mt-3">
+          <Button
+            onClick={onCreateProject}
+            className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-md shadow-indigo-500/15 hover:shadow-lg hover:shadow-indigo-500/25 active:scale-[0.98] transition-all duration-200 px-4 py-2.5 text-sm font-semibold border-0"
+          >
+            <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
+            <span>{t('createProject', { ns: 'sidebar' })}</span>
+          </Button>
+        </div>
+
         {/* Search bar */}
         {showSearchTools && (
-          <div className="mt-2.5 space-y-2">
+          <div className="mt-3.5 space-y-2">
             {/* Search mode toggle */}
-            <div className="flex rounded-lg bg-muted/50 p-0.5">
+            <div className="flex rounded-xl bg-zinc-200/50 dark:bg-zinc-900/50 p-0.5 border border-zinc-200/10 dark:border-zinc-800/20">
               <button
                 onClick={() => onSearchModeChange('projects')}
                 aria-pressed={searchMode === 'projects'}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-all",
+                  "flex-1 flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium transition-all",
                   searchMode === 'projects'
-                    ? "bg-background shadow-sm text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-white dark:bg-zinc-800 shadow-sm text-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/10 dark:hover:bg-zinc-800/10"
                 )}
               >
                 <Folder className="h-3 w-3" />
@@ -144,10 +146,10 @@ export default function SidebarHeader({
                 onClick={() => onSearchModeChange('conversations')}
                 aria-pressed={searchMode === 'conversations'}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-all",
+                  "flex-1 flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium transition-all",
                   searchMode === 'conversations'
-                    ? "bg-background shadow-sm text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-white dark:bg-zinc-800 shadow-sm text-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/10 dark:hover:bg-zinc-800/10"
                 )}
               >
                 <MessageSquare className="h-3 w-3" />
@@ -160,10 +162,10 @@ export default function SidebarHeader({
                   aria-label={t('search.archiveOnlyTooltip', 'Archive only')}
                   title={t('search.archiveOnlyTooltip', 'Archive only')}
                   className={cn(
-                    "flex items-center justify-center rounded-md px-2.5 py-1.5 text-xs font-medium transition-all",
+                    "flex items-center justify-center rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all",
                     searchMode === 'archived'
-                      ? "bg-background shadow-sm text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-white dark:bg-zinc-800 shadow-sm text-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/10 dark:hover:bg-zinc-800/10"
                   )}
                 >
                   <Archive className="h-3 w-3" />
@@ -177,7 +179,7 @@ export default function SidebarHeader({
                 placeholder={searchPlaceholder}
                 value={searchFilter}
                 onChange={(event) => onSearchFilterChange(event.target.value)}
-                className="nav-search-input h-9 rounded-xl border-0 pl-9 pr-14 text-sm transition-all duration-200 placeholder:text-muted-foreground/40 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="nav-search-input h-9.5 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-100/50 dark:bg-zinc-900/30 pl-9 pr-14 text-sm transition-all duration-200 placeholder:text-muted-foreground/45 focus-visible:border-indigo-500/50 focus-visible:ring-1 focus-visible:ring-indigo-500/20 focus-visible:ring-offset-0"
               />
               {searchFilter ? (
                 <button
@@ -225,33 +227,44 @@ export default function SidebarHeader({
 
           <div className="flex flex-shrink-0 gap-1.5">
             <button
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted/50 transition-all active:scale-95"
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-200/50 dark:bg-zinc-800/50 transition-all active:scale-95"
               onClick={onRefresh}
               disabled={isRefreshing}
             >
               <RefreshCw className={`h-4 w-4 text-muted-foreground ${isRefreshing ? 'animate-spin' : ''}`} />
             </button>
             <button
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/90 text-primary-foreground transition-all active:scale-95"
-              onClick={onCreateProject}
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-200/50 dark:bg-zinc-800/50 transition-all active:scale-95"
+              onClick={onCollapseSidebar}
             >
-              <FolderPlus className="h-4 w-4" />
+              <X className="h-4 w-4 text-muted-foreground" />
             </button>
           </div>
         </div>
 
+        {/* Prominent Create Project Button on Mobile */}
+        <div className="mt-3">
+          <Button
+            onClick={onCreateProject}
+            className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-md shadow-indigo-500/15 hover:shadow-lg hover:shadow-indigo-500/25 active:scale-[0.98] transition-all duration-200 px-4 py-2.5 text-sm font-semibold border-0"
+          >
+            <Plus className="h-4 w-4 transition-transform duration-300 group-hover:rotate-90" />
+            <span>{t('createProject', { ns: 'sidebar' })}</span>
+          </Button>
+        </div>
+
         {/* Mobile search */}
         {showSearchTools && (
-          <div className="mt-2.5 space-y-2">
-            <div className="flex rounded-lg bg-muted/50 p-0.5">
+          <div className="mt-3.5 space-y-2">
+            <div className="flex rounded-xl bg-zinc-200/50 dark:bg-zinc-900/50 p-0.5 border border-zinc-200/10 dark:border-zinc-800/20">
               <button
                 onClick={() => onSearchModeChange('projects')}
                 aria-pressed={searchMode === 'projects'}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-all",
+                  "flex-1 flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium transition-all",
                   searchMode === 'projects'
-                    ? "bg-background shadow-sm text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-white dark:bg-zinc-800 shadow-sm text-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/10 dark:hover:bg-zinc-800/10"
                 )}
               >
                 <Folder className="h-3 w-3" />
@@ -261,10 +274,10 @@ export default function SidebarHeader({
                 onClick={() => onSearchModeChange('conversations')}
                 aria-pressed={searchMode === 'conversations'}
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition-all",
+                  "flex-1 flex items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium transition-all",
                   searchMode === 'conversations'
-                    ? "bg-background shadow-sm text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-white dark:bg-zinc-800 shadow-sm text-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/10 dark:hover:bg-zinc-800/10"
                 )}
               >
                 <MessageSquare className="h-3 w-3" />
@@ -277,10 +290,10 @@ export default function SidebarHeader({
                   aria-label={t('search.archiveOnlyTooltip', 'Archive only')}
                   title={t('search.archiveOnlyTooltip', 'Archive only')}
                   className={cn(
-                    "flex items-center justify-center rounded-md px-2.5 py-1.5 text-xs font-medium transition-all",
+                    "flex items-center justify-center rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all",
                     searchMode === 'archived'
-                      ? "bg-background shadow-sm text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-white dark:bg-zinc-800 shadow-sm text-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/10 dark:hover:bg-zinc-800/10"
                   )}
                 >
                   <Archive className="h-3 w-3" />
@@ -294,7 +307,7 @@ export default function SidebarHeader({
                 placeholder={searchPlaceholder}
                 value={searchFilter}
                 onChange={(event) => onSearchFilterChange(event.target.value)}
-                className="nav-search-input h-10 rounded-xl border-0 pl-10 pr-9 text-sm transition-all duration-200 placeholder:text-muted-foreground/40 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="nav-search-input h-10 rounded-xl border border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-100/50 dark:bg-zinc-900/30 pl-10 pr-9 text-sm transition-all duration-200 placeholder:text-muted-foreground/45 focus-visible:border-indigo-500/50 focus-visible:ring-1 focus-visible:ring-indigo-500/20 focus-visible:ring-offset-0"
               />
               {searchFilter && (
                 <button

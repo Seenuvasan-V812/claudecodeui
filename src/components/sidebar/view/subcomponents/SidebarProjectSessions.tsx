@@ -82,27 +82,27 @@ export default function SidebarProjectSessions({
   const hasSessions = sessions.length > 0;
 
   return (
-    <div className="ml-3 space-y-1 border-l border-border pl-3">
+    <div className="ml-3 space-y-1 border-l border-zinc-200 dark:border-zinc-800/80 pl-3">
       <div className="px-3 pb-1 pt-1 md:hidden">
         <button
-          className="flex h-8 w-full items-center justify-center gap-2 rounded-md bg-primary text-xs font-medium text-primary-foreground transition-all duration-150 hover:bg-primary/90 active:scale-[0.98]"
+          className="flex h-8 w-full items-center justify-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-800/60 text-xs font-medium text-muted-foreground hover:text-foreground transition-all duration-150 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 active:scale-[0.98]"
           onClick={() => {
             onProjectSelect(project);
             onNewSession(project);
           }}
         >
-          <Plus className="h-3 w-3" />
+          <Plus className="h-3.5 w-3.5" />
           {t('sessions.newSession')}
         </button>
       </div>
 
       <Button
-        variant="default"
+        variant="ghost"
         size="sm"
-        className="hidden h-8 w-full justify-start gap-2 bg-primary text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 md:flex"
+        className="hidden h-8 w-full justify-start gap-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-zinc-200/50 dark:hover:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-800/60 rounded-lg transition-all md:flex"
         onClick={() => onNewSession(project)}
       >
-        <Plus className="h-3 w-3" />
+        <Plus className="h-3.5 w-3.5" />
         {t('sessions.newSession')}
       </Button>
 

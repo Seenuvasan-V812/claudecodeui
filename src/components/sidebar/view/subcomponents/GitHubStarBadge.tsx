@@ -18,12 +18,12 @@ export default function GitHubStarBadge() {
   if (IS_PLATFORM || isDismissed) return null;
 
   return (
-    <div className="group/star relative hidden md:block">
+    <div className="group/star relative hidden md:block mt-2.5">
       <a
         href={GITHUB_REPO_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 rounded-lg border border-border/50 bg-muted/30 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+        className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200/60 dark:border-zinc-800/60 bg-zinc-100/50 dark:bg-zinc-900/30 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-zinc-200/85 dark:hover:bg-zinc-800/50 hover:text-foreground"
       >
         <GitHubIcon className="h-3.5 w-3.5" />
         <Star className="h-3 w-3" />
