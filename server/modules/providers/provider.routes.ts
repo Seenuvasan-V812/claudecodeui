@@ -35,7 +35,7 @@ const readPathParam = (value: unknown, name: string): string => {
 const normalizeProviderParam = (value: unknown): string =>
   readPathParam(value, 'provider').trim().toLowerCase();
 
-const SESSION_ID_PATTERN = /^[a-zA-Z0-9._-]{1,120}$/;
+const SESSION_ID_PATTERN = /^[a-zA-Z0-9._\-:@\+ ]{1,250}$/;
 
 const parseSessionId = (value: unknown): string => {
   const sessionId = readPathParam(value, 'sessionId').trim();
